@@ -1,6 +1,7 @@
 import requests
 from Book import Book
 from Character import Character
+from House import House
 
 def get_json(**params):
     url = "https://www.anapioficeandfire.com/api/" + params["type"] + "/"
@@ -32,5 +33,15 @@ def get_characters(id=None, name=None, gender=None, culture=None, born=None, die
     else:
         return [Character(*(x.values())) for x in json]
 
-print(get_characters(id=2)[0].name)
+def get_houses(id=None, name=None, region=None, words=None, hasWords=None, hasTitles=None, \
+    hasSeats=None, hasDiedOut=None, hasAncestralWeapons=None):
+    args = {key: value for (key, value) in locals().items() if value is not None}
+    args["type"] = "houses"
+    json = get_json(**args)
+    if (type(json) == dict):
+        return [House(*json.values())]
+    else:
+        return [House(*(x.values())) for x in json]
+
+print(get_houses(id=2)[0].name)
 #print(get_books()[0].mediaType)
