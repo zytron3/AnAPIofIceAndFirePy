@@ -1,14 +1,15 @@
 import requests
-url = "https://www.anapioficeandfire.com/api/characters?page=1&pageSize=10"
-print(url)
+import Book
 
 def get_books(number=None, name=None, fromReleaseDate=None, toReleaseDate=None):
     url = "https://www.anapioficeandfire.com/api/books/"
     if (number is not None):
         url += str(number) + "/"
     if name is None and fromReleaseDate is None and toReleaseDate is None:
-        resp = requests.get(url)
-        return resp
+        res = requests.get(url).json()
+        if type(res) == dict:
+            res = [res]
+        return [Book.Book(*x.values()) for x in res]
     else:
         url += "?"
     if name is not None:
@@ -18,7 +19,13 @@ def get_books(number=None, name=None, fromReleaseDate=None, toReleaseDate=None):
     if toReleaseDate is not None:
         url += "toReleaseDate=" + toReleaseDate + "&"
     url = url[:-1]  
-    resp = requests.get(url)
-    return resp
+    
+    res = requests.get(url).json()
+    #only 1 book
+    if (type(res) == dict):
+        return [Book.Book(*res.values())]
+    else:
+        return [Book.Book(*(x.values())) for x in res]
 
-print(get_books(number=1).content)
+print(get_books(number=2)[0].authors)
+#print(get_books()[0].mediaType)
