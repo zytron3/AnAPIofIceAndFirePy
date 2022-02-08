@@ -1,3 +1,5 @@
+import requests
+
 class Character(object):
     def __init__(self, url, name, gender, culture, born, died, titles, aliases, \
     father, mother, spouse, allegiances, \
@@ -18,3 +20,11 @@ class Character(object):
         self.povBooks = povBooks
         self.tvSeries = tvSeries
         self.playedBy = playedBy
+
+    @classmethod
+    def fromurl(cls, url):
+        json = requests.get(url).json()
+        if (type(json) == dict):
+            return [cls(*json.values())]
+        else:
+            return [cls(*(x.values())) for x in json]

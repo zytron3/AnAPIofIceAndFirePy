@@ -1,3 +1,5 @@
+import requests
+
 class House(object):
     def __init__(self, url, name, region, coatOfArms, words, titles, seats, \
         currentLord, heir, overlord, founded, founder, diedOut, ancestralWeapons, cadetBranches, swornMembers):
@@ -17,3 +19,11 @@ class House(object):
         self.ancestralWeapons = ancestralWeapons
         self.cadetBranches = cadetBranches
         self.swornMembers = swornMembers
+
+    @classmethod
+    def fromurl(cls, url):
+        json = requests.get(url).json()
+        if (type(json) == dict):
+            return [cls(*json.values())]
+        else:
+            return [cls(*(x.values())) for x in json]

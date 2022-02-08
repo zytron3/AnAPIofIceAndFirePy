@@ -43,5 +43,3 @@ def get_houses(id=None, name=None, region=None, words=None, hasWords=None, hasTi
     else:
         return [House(*(x.values())) for x in json]
 
-print(get_houses(id=2)[0].name)
-#print(get_books()[0].mediaType)

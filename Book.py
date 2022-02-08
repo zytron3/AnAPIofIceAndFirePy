@@ -1,3 +1,5 @@
+import requests
+
 class Book(object):
     def __init__(self, url, name, isbn, authors, numberOfPages, publisher, country, mediaType, released, characters, povCharacters):
         self.url = url
@@ -13,13 +15,13 @@ class Book(object):
         self.characters = characters
         self.characters_processed = None
         self.povCharacters = povCharacters
-    """
-    def get_characters(self):
-        if self.characters_processed is not None:
-            return self.characters_processed
-        result = []
-        for character in self.characters:
-            result.append(get_character(character))
-    """
+    
+    @classmethod
+    def fromurl(cls, url):
+        json = requests.get(url).json()
+        if (type(json) == dict):
+            return [cls(*json.values())]
+        else:
+            return [cls(*(x.values())) for x in json]
 
 
